@@ -74,7 +74,7 @@
       const res = await fetch(`${webAppUrl}?getNames=1`);
       const names = await res.json();
       const select = document.getElementById('userSelect');
-      select.innerHTML = '<option value="">Select a user</option>';
+      select.innerHTML = '<option value="">Select a student</option>';
       names.forEach(name => {
         const opt = document.createElement('option');
         opt.value = name;
