@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>1Must Ticket Counter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding: 1rem;
+      max-width: 600px;
+      margin: auto;
+      background: #f9f9f9;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      background: #fff;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    select, input[type="number"] {
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      background: #007BFF;
+      color: white;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    iframe {
+      margin-top: 2rem;
+      width: 100%;
+      height: 400px;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h1>Ticket Counter</h1>
+  <form id="pointForm">
+    <select id="userSelect" required>
+      <option value="">Loading students...</option>
+    </select>
+    <input type="number" id="pointsInput" placeholder="Enter points (+ or -)" required>
+    <button type="submit">Submit</button>
+  </form>
+
+  <iframe src="https://docs.google.com/spreadsheets/d/18K_NY8AUu4epDG2DojvCcWu02QvBnZlwFj4_ttZN47o/edit?usp=sharing"></iframe>
+
+  <script>
+    const webAppUrl = 'https://script.google.com/macros/s/AKfycbxxotBY8jZxp5X7KD7PSliNVmuMrSVNT5MYvRgqpBXaGKC5hIGiLZOWi_nHt--XlS9wUg/exec';
+
+    async function fetchNames() {
+      const res = await fetch(`${webAppUrl}?getNames=1`);
+      const names = await res.json();
+      const select = document.getElementById('userSelect');
+      select.innerHTML = '<option value="">Select a user</option>';
+      names.forEach(name => {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        select.appendChild(opt);
+      });
+    }
+
+    document.getElementById('pointForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user = document.getElementById('userSelect').value;
+      const points = document.getElementById('pointsInput').value;
+
+      const params = new URLSearchParams({ user, points });
+
+      await fetch(webAppUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params
+      });
+
+      document.getElementById('pointForm').reset();
+      alert('Tickets submitted!');
+    });
+
+    fetchNames();
+  </script>
+</body>
+</html>
