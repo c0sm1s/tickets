@@ -65,6 +65,12 @@
     <button type="submit">Submit</button>
   </form>
 
+  <h2>Add New Student</h2>
+  <form id="addStudentForm">
+    <input type="text" id="newStudentName" placeholder="Student name" required>
+    <button type="submit">Add Student</button>
+  </form>
+
   <iframe src="https://docs.google.com/spreadsheets/d/18K_NY8AUu4epDG2DojvCcWu02QvBnZlwFj4_ttZN47o/edit?usp=sharing"></iframe>
 
   <script>
@@ -99,6 +105,25 @@
       document.getElementById('pointForm').reset();
       alert('Tickets submitted!');
     });
+
+  document.getElementById('addStudentForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const newStudent = document.getElementById('newStudentName').value.trim();
+    if (!newStudent) return;
+
+    const params = new URLSearchParams({ newStudent });
+
+    const response = await fetch(webAppUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params
+    });
+
+    const result = await response.text();
+    alert(result);
+    document.getElementById('addStudentForm').reset();
+    fetchNames(); // refresh dropdown
+  });
 
     fetchNames();
   </script>
